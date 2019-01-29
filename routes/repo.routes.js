@@ -4,7 +4,7 @@ module.exports = app => {
   });
 
   app.post("/api/github/hook", async (req, res) => {
-    console.log(req.body.payload);
+    console.log(req.body);
     // res.status(200).send("success");
   });
 };
