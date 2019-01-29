@@ -7,7 +7,6 @@ module.exports = app => {
 
   app.post("/api/github/hook", async (req, res) => {
     let payload = req.body;
-    console.log(payload);
     let repoUpdate;
     const update_exists = await RepoUpdate.findOne({
       update_id: payload.commits[0].id
