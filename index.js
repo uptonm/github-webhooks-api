@@ -16,7 +16,7 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/api/github/hook", async (req, res) => {
-  console.log(req.body);
+  console.log(req.body.payload);
   res.status(200).send("success");
 });
 
