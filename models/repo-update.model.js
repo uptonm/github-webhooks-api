@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const repoUpdateModel = new Schema({
-  updateid: String,
+const RepoUpdateModel = new Schema({
+  update_id: String,
   timestamp: String,
   message: String,
   url: String,
@@ -12,10 +12,11 @@ const repoUpdateModel = new Schema({
     username: String
   },
   changes: {
-    added: Number,
-    removed: Number,
-    modified: Number
+    added: Array,
+    modified: Array,
+    removed: Array
   }
 });
 
-module.exports = repoUpdateModel;
+const RepoUpdate = mongoose.model("repo_updates", RepoUpdateModel);
+module.exports = RepoUpdate;
