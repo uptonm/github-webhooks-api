@@ -6,47 +6,48 @@ module.exports = app => {
   });
 
   app.post("/api/github/hook", async (req, res) => {
+    let payload = req.body.payload;
     let repoUpdate;
     const update_exists = await RepoUpdate.findOne({
-      update_id: req.body.commits[0].id
+      update_id: payload.commits[0].id
     });
     if (update_exists) {
       repoUpdate = update_exists;
     } else {
       repoUpdate = await new RepoUpdate({
-        update_id: req.body.commits[0].id,
-        timestamp: req.body.commits[0].timestamp,
-        message: req.body.commits[0].message,
-        url: req.body.commits[0].url,
+        update_id: payload.commits[0].id,
+        timestamp: payload.commits[0].timestamp,
+        message: payload.commits[0].message,
+        url: payload.commits[0].url,
         author: {
-          name: req.body.commits[0].author.name,
-          email: req.body.commits[0].author.email,
-          username: req.body.commits[0].author.username
+          name: payload.commits[0].author.name,
+          email: payload.commits[0].author.email,
+          username: payload.commits[0].author.username
         },
         changes: {
-          added: req.body.commits[0].added,
-          modified: req.body.commits[0].modified,
-          removed: req.body.commits[0].removed
+          added: payload.commits[0].added,
+          modified: payload.commits[0].modified,
+          removed: payload.commits[0].removed
         }
       }).save();
     }
 
-    const exists = await Repo.findOne({ repo_id: req.body.repository.id });
+    const exists = await Repo.findOne({ repo_id: payload.repository.id });
     if (exists) {
       const update = await Repo.findOneAndUpdate(
         { repo_id: exists.repo_id },
         {
-          repo_name: req.body.repository.name,
-          url: req.body.repository.url,
+          repo_name: payload.repository.name,
+          url: payload.repository.url,
           last_update: repoUpdate._id
         }
       );
       return res.status(200).send(update);
     }
     const repo = await new Repo({
-      repo_id: req.body.repository.id,
-      repo_name: req.body.repository.name,
-      url: req.body.repository.url,
+      repo_id: payload.repository.id,
+      repo_name: payload.repository.name,
+      url: payload.repository.url,
       last_update: repoUpdate._id
     }).save();
     return res.status(200).send(repo);
