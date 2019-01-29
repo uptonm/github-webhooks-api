@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const morgan = require("morgan");
@@ -6,19 +7,20 @@ require("dotenv").config();
 
 const app = express();
 
+mongoose.connect(
+  process.env.DB_URI,
+  { useNewUrlParser: true }
+);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cors());
 
-app.get("/", async (req, res) => {
-  res.status(200).send("API Working");
-});
+require("./models/repo-update.model");
+require("./models/repo.model");
 
-app.post("/api/github/hook", async (req, res) => {
-  console.log(req.body.payload);
-  res.status(200).send("success");
-});
+require("./routes/repo.routes")(app);
 
 app.listen(process.env.PORT, () => {
   console.log(`App listening on ${process.env.PORT}`);
