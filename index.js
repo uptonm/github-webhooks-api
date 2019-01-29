@@ -11,7 +11,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cors());
 
-app.get("/api/github/hook", async (req, res) => {
+app.get("/", async (req, res) => {
+  res.status(200).send("API Working");
+});
+
+app.post("/api/github/hook", async (req, res) => {
   console.log(req.body);
   res.status(200).send("success");
 });
