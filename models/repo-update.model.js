@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
+const {
+  Schema
+} = mongoose;
 
 const RepoUpdateModel = new Schema({
   update_id: String,
@@ -9,7 +11,8 @@ const RepoUpdateModel = new Schema({
   author: {
     name: String,
     email: String,
-    username: String
+    username: String,
+    avatar_url: String
   },
   changes: {
     added: Array,

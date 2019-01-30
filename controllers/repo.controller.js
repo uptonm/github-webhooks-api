@@ -47,7 +47,8 @@ exports.post = async (req, res) => {
       author: {
         name: payload.commits[0].author.name,
         email: payload.commits[0].author.email,
-        username: payload.commits[0].author.username
+        username: payload.commits[0].author.username,
+        avatar_url: payload.sender.avatar_url
       },
       changes: {
         added: payload.commits[0].added,
@@ -57,22 +58,25 @@ exports.post = async (req, res) => {
     }).save();
   }
 
-  const exists = await Repo.findOne({ repo_id: payload.repository.id });
+  const exists = await Repo.findOne({
+    repo_id: payload.repository.id
+  });
   if (exists) {
-    const update = await Repo.findOneAndUpdate(
-      { repo_id: exists.repo_id },
-      {
-        repo_name: payload.repository.name,
-        url: payload.repository.url,
-        last_update: repoUpdate._id
-      }
-    );
+    const update = await Repo.findOneAndUpdate({
+      repo_id: exists.repo_id
+    }, {
+      repo_name: payload.repository.name,
+      url: payload.repository.url,
+      last_update: repoUpdate._id
+    });
     return res.status(200).send(update);
   }
   const repo = await new Repo({
     repo_id: payload.repository.id,
     repo_name: payload.repository.name,
     url: payload.repository.url,
+    description: payload.repository.description,
+    language: payload.repository.language,
     last_update: repoUpdate._id
   }).save();
   return res.status(200).send(repo);

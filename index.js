@@ -8,12 +8,15 @@ require("dotenv").config();
 const app = express();
 
 mongoose.connect(
-  process.env.DB_URI,
-  { useNewUrlParser: true }
+  process.env.DB_URI, {
+    useNewUrlParser: true
+  }
 );
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(morgan("dev"));
 app.use(cors());
 
