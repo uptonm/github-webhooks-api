@@ -5,6 +5,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
+const path = require("path")
 require("dotenv").config();
 
 const app = express();
@@ -30,7 +31,12 @@ require("./models/repo.model");
 
 require("./routes/repo.routes")(app);
 
-app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(express.static(__dirname + "/dist"));
+
+app.get("/*", function(req, res) {
+  res.sendFile(path.join(__dirname + "/dist/index.html"));
+});
 
 app.listen(process.env.PORT, () => {
   console.log(`App listening on ${process.env.PORT}`);
